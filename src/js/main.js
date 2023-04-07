@@ -11,11 +11,11 @@ document.addEventListener('DOMContentLoaded', () => {
 
 	tabsContainer.addEventListener('click', event => {
 		const target = event.target;
-		if(target){
+		if (target) {
 			clearActive();
 			target.classList.add('tabheader__item_active');
 			tabs.forEach((item, i) => {
-				if(item === target){
+				if (item === target) {
 					hide();
 					show(i);
 				}
@@ -23,40 +23,38 @@ document.addEventListener('DOMContentLoaded', () => {
 		}
 	});
 
-	function clearActive(){
+	function clearActive() {
 		tabs.forEach(item => item.classList.remove('tabheader__item_active'));
 	}
 
-	function hide(){
+	function hide() {
 		slides.forEach(item => item.classList.add('hide'));
 		slides.forEach(item => item.classList.remove('show', 'fade'));
 	}
-    
-	function show(i){
+
+	function show(i) {
 		slides[i].classList.add('show', 'fade');
 		slides[i].classList.remove('hide');
 	}
 
 
-
-
 	//TODO realise timer
 	const deadline = '2023-05-20';
-	const today = Date.parse(new Date());
-	
 
-	function timeRemain(deadline){
+
+
+	function timeRemain(deadline) {
 		let days, hours, minutes, seconds;
-		const t = Date.parse(deadline) - today;
-		if(t<=0){
+		const t = Date.parse(deadline) - Date.parse(new Date());
+		if (t <= 0) {
 			days = 0;
 			hours = 0;
 			minutes = 0;
 			seconds = 0;
 		} else {
-			days = Math.floor((t / (1000*3600*24)));
-			hours = Math.floor((t / (1000*3600) % 24));
-			minutes = Math.floor((t / (1000*60) % 60));
+			days = Math.floor((t / (1000 * 3600 * 24)));
+			hours = Math.floor((t / (1000 * 3600) % 24));
+			minutes = Math.floor((t / (1000 * 60) % 60));
 			seconds = Math.floor((t / 1000) % 60);
 		}
 
@@ -65,30 +63,32 @@ document.addEventListener('DOMContentLoaded', () => {
 			'days': days,
 			'hours': hours,
 			'minutes': minutes,
-			'seconds': seconds,        
+			'seconds': seconds,
 		};
 	}
 
-	function setTimer(deadline){
+	function setTimer(deadline) {
 		const daysField = document.querySelector('#days'),
 			hoursField = document.querySelector('#hours'),
 			minutesField = document.querySelector('#minutes'),
 			secondsField = document.querySelector('#seconds');
 		const timeInterval = setInterval(updateTime, 1000);
 		updateTime();
-		function updateTime(){
+
+		function updateTime() {
 			const timer = timeRemain(deadline);
-			daysField.textContent = timer.days; 
-			hoursField.textContent = timer.hours; 
-			minutesField.textContent = timer.minutes; 
-			secondsField.textContent = timer.seconds; 
-			if(timer.total<=0){
+			daysField.innerHTML = timer.days;
+			hoursField.textContent = timer.hours;
+			minutesField.textContent = timer.minutes;
+			secondsField.innerHTML = `${timer.seconds}`;
+			if (timer.total <= 0) {
 				clearInterval(timeInterval);
 			}
 		}
 
 	}
+
 	setTimer(deadline);
-	
+
 
 });
