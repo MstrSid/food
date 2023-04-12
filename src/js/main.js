@@ -41,13 +41,13 @@ document.addEventListener('DOMContentLoaded', () => {
 
 
 	//TODO realise timer
-	const deadline = '2023-05-20';
-	const today = Date.parse(new Date());
+	const deadline = '2023-04-13';
+	
 	
 
 	function timeRemain(deadline){
 		let days, hours, minutes, seconds;
-		const t = Date.parse(deadline) - today;
+		const t = Date.parse(deadline) - Date.parse(new Date());
 		if(t<=0){
 			days = 0;
 			hours = 0;
@@ -78,10 +78,10 @@ document.addEventListener('DOMContentLoaded', () => {
 		updateTime();
 		function updateTime(){
 			const timer = timeRemain(deadline);
-			daysField.textContent = timer.days; 
-			hoursField.textContent = timer.hours; 
-			minutesField.textContent = timer.minutes; 
-			secondsField.textContent = timer.seconds; 
+			daysField.textContent = setZero(timer.days); 
+			hoursField.textContent = setZero(timer.hours);
+			minutesField.textContent = setZero(timer.minutes);
+			secondsField.textContent = setZero(timer.seconds);
 			if(timer.total<=0){
 				clearInterval(timeInterval);
 			}
@@ -89,6 +89,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
 	}
 	setTimer(deadline);
+
+	function setZero(num){
+		return num < 10 ? num = `0${num}` : num;
+	}
 	
 
 });
