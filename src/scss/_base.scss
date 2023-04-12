@@ -68,6 +68,23 @@ a {
   display: none
 }
 
+.top-up{
+position: fixed;
+right: 0;
+bottom: 0;
+width: 48px;
+height: 48px;
+text-align: center;
+vertical-align: middle;
+background-color:rgb(194, 233, 34);
+border-radius: 5px;
+margin: 0 5px 5px 0;
+font-size: 48px;
+  &:hover{
+    cursor: pointer;
+  }
+}
+
 .fade {
   animation-name: fade;
   animation-duration: 1.5s;
@@ -80,4 +97,18 @@ a {
   to {
     opacity: 1;
   }
+}
+
+  .fade-out {
+    animation-name: fade-out;
+    animation-duration: 1.5s;
+  }
+  
+  @keyframes fade-out {
+    to {
+      opacity: 0.0;
+    }
+    from {
+      opacity: 1;
+    }
 }

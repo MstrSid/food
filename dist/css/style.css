@@ -1,83 +1,4 @@
 @import url("https://fonts.googleapis.com/css?family=Roboto:300,400,700&display=swap&subset=cyrillic-ext");
-* {
-  box-sizing: border-box;
-  margin: 0;
-  padding: 0;
-  font-family: "Roboto", sans-serif;
-}
-
-a {
-  text-decoration: none;
-}
-
-.btn {
-  width: 220px;
-  height: 65px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  background-color: #fff;
-  font-size: 18px;
-  font-weight: bold;
-  border: 1px solid rgba(0, 0, 0, 0.2);
-  box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.2);
-  cursor: pointer;
-  transition: 0.3s all;
-  outline: none;
-}
-.btn_white {
-  background-color: #fff;
-}
-.btn_dark {
-  background-color: #303030;
-  color: #fff;
-  border: none;
-}
-.btn_min {
-  height: 50px;
-}
-.btn:hover {
-  box-shadow: 0px 4px 30px rgba(0, 0, 0, 0.3);
-}
-
-.container {
-  max-width: 1200px;
-  margin: 0 auto;
-}
-
-.divider {
-  width: 330px;
-  height: 1px;
-  margin: 0 auto;
-  background-color: rgba(0, 0, 0, 0.5);
-}
-
-.title {
-  font-size: 36px;
-  font-weight: 400;
-}
-
-.show {
-  display: block;
-}
-
-.hide {
-  display: none;
-}
-
-.fade {
-  animation-name: fade;
-  animation-duration: 1.5s;
-}
-
-@keyframes fade {
-  from {
-    opacity: 0.1;
-  }
-  to {
-    opacity: 1;
-  }
-}
 .header {
   display: flex;
   justify-content: space-between;
@@ -589,7 +510,7 @@ a {
   top: 0;
   left: 0;
   z-index: 1050;
-  display: none;
+  display: block;
   width: 100%;
   height: 100%;
   overflow: hidden;
@@ -643,4 +564,114 @@ a {
   display: block;
   width: 280px;
   margin: 0 auto;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  font-family: "Roboto", sans-serif;
+}
+
+a {
+  text-decoration: none;
+}
+
+.btn {
+  width: 220px;
+  height: 65px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: #fff;
+  font-size: 18px;
+  font-weight: bold;
+  border: 1px solid rgba(0, 0, 0, 0.2);
+  box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.2);
+  cursor: pointer;
+  transition: 0.3s all;
+  outline: none;
+}
+.btn_white {
+  background-color: #fff;
+}
+.btn_dark {
+  background-color: #303030;
+  color: #fff;
+  border: none;
+}
+.btn_min {
+  height: 50px;
+}
+.btn:hover {
+  box-shadow: 0px 4px 30px rgba(0, 0, 0, 0.3);
+}
+
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.divider {
+  width: 330px;
+  height: 1px;
+  margin: 0 auto;
+  background-color: rgba(0, 0, 0, 0.5);
+}
+
+.title {
+  font-size: 36px;
+  font-weight: 400;
+}
+
+.show {
+  display: block;
+}
+
+.hide {
+  display: none;
+}
+
+.top-up {
+  position: fixed;
+  right: 0;
+  bottom: 0;
+  width: 48px;
+  height: 48px;
+  text-align: center;
+  vertical-align: middle;
+  background-color: rgb(194, 233, 34);
+  border-radius: 5px;
+  margin: 0 5px 5px 0;
+  font-size: 48px;
+}
+.top-up:hover {
+  cursor: pointer;
+}
+
+.fade {
+  animation-name: fade;
+  animation-duration: 1.5s;
+}
+
+@keyframes fade {
+  from {
+    opacity: 0.1;
+  }
+  to {
+    opacity: 1;
+  }
+}
+.fade-out {
+  animation-name: fade-out;
+  animation-duration: 1.5s;
+}
+
+@keyframes fade-out {
+  to {
+    opacity: 0;
+  }
+  from {
+    opacity: 1;
+  }
 }

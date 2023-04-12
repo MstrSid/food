@@ -93,4 +93,76 @@ document.addEventListener('DOMContentLoaded', () => {
 	function setZero(num){
 		return num < 10 ? num = `0${num}` : num;
 	}
+
+	//TODO modal
+	const triggers = document.querySelectorAll('[data-modal]');
+	const modal = document.querySelector('.modal');
+	const close = document.querySelector('[data-close]');
+
+	triggers.forEach(item => {
+		item.addEventListener('click',showModal);
+	});
+
+	close.addEventListener('click', closeModal);
+	
+	modal.addEventListener('click', event => {
+		if(event.target === modal){
+			closeModal();
+		}
+	});
+
+	window.addEventListener('keydown', event => {
+		if(event.code === 'Escape' && modal.classList.contains('show')){
+			closeModal();
+		}
+	});
+
+	const modalTimeOut = setTimeout(showModal, 360000);
+
+	function closeModal(){
+		modal.classList.remove('show', 'fade');
+		modal.classList.add('fade-out');
+		setTimeout(() => modal.classList.add('hide'), 1500);
+		document.documentElement.style.overflow = 'unset';
+	}
+
+	function showModal(){
+		modal.classList.add('show', 'fade');
+		modal.classList.remove('hide', 'fade-out');
+		document.documentElement.style.overflow = 'hidden';
+		clearTimeout(modalTimeOut);
+		window.removeEventListener('scroll', showByScroll);
+	}
+
+	window.addEventListener('scroll', showByScroll);
+
+	function showByScroll(){
+		if(window.scrollY+document.documentElement.clientHeight >= document.documentElement.scrollHeight - 1){
+			showModal();
+		}
+	}
+
+	const toTop = document.querySelector('.top-up');
+	window.addEventListener('scroll', showTopButton);
+	toTop.addEventListener('click', () => {
+		document.documentElement.scrollTop = 0;
+	});
+
+	function showTopButton(){
+		console.log('11');
+		if(window.scrollY >= 700){
+			toTop.classList.add('show', 'fade');
+			toTop.classList.remove('hide', 'fade-out');
+			
+		} else {
+			toTop.classList.remove('show');
+			toTop.classList.add('hide');
+			toTop.classList.add('fade-out');
+			setTimeout(() => toTop.classList.add('hide'), 1500);
+		}
+	}
+
+
+
+	
 });
