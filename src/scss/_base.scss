@@ -9,6 +9,15 @@ a {
   text-decoration: none;
 }
 
+
+.show {
+  display: block
+}
+
+.hide {
+  display: none
+}
+
 .btn {
   width: 220px;
   height: 65px;
@@ -58,14 +67,6 @@ a {
 .title {
   font-size: 36px;
   font-weight: 400;
-}
-
-.show {
-  display: block
-}
-
-.hide {
-  display: none
 }
 
 .fade {

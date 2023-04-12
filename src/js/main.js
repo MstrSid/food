@@ -42,7 +42,6 @@ document.addEventListener('DOMContentLoaded', () => {
 	const deadline = '2023-05-20';
 
 
-
 	function timeRemain(deadline) {
 		let days, hours, minutes, seconds;
 		const t = Date.parse(deadline) - Date.parse(new Date());
@@ -77,10 +76,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
 		function updateTime() {
 			const timer = timeRemain(deadline);
-			daysField.innerHTML = timer.days;
-			hoursField.textContent = timer.hours;
-			minutesField.textContent = timer.minutes;
-			secondsField.innerHTML = `${timer.seconds}`;
+			daysField.textContent = zeroed(timer.days);
+			hoursField.textContent = zeroed(timer.hours);
+			minutesField.textContent = zeroed(timer.minutes);
+			secondsField.textContent = zeroed(timer.seconds);
 			if (timer.total <= 0) {
 				clearInterval(timeInterval);
 			}
@@ -88,7 +87,61 @@ document.addEventListener('DOMContentLoaded', () => {
 
 	}
 
+	function zeroed(num) {
+		return num <= 9 ? `0${num}` : num;
+	}
+
 	setTimer(deadline);
 
+	//TODO add modal
+	const modal = document.querySelector('.modal');
+	const triggers = document.querySelectorAll('[data-modal]');
+	const dataClose = modal.querySelector('.modal__close');
 
+
+	triggers.forEach(item => {
+		item.addEventListener('click', showModal);
+	});
+
+	dataClose.addEventListener('click', hideModal);
+
+	modal.addEventListener('click', event => {
+		if (event.target === modal) {
+			hideModal();
+		}
+	});
+
+
+	document.addEventListener('keydown', event => {
+		if (event.code === 'Escape' && modal.classList.contains('show')) {
+			hideModal();
+		}
+	});
+
+
+	const modalTimerId = setTimeout(showModal, 6000);
+
+
+	window.addEventListener('scroll', showModalOnScroll);
+
+	function showModalOnScroll() {
+		if (window.scrollY + document.documentElement.clientHeight >= document.documentElement.scrollHeight - 1) {
+			showModal();
+		}
+	}
+
+	function showModal() {
+		modal.classList.add('show');
+		modal.classList.remove('hide');
+		document.body.style.overflow = 'hidden';
+		clearTimeout(modalTimerId);
+		window.removeEventListener('scroll', showModalOnScroll);
+	}
+
+	function hideModal() {
+		modal.classList.add('hide');
+		modal.classList.remove('show');
+		document.body.style.overflow = '';
+	}
 });
+
