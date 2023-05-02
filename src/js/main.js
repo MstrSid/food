@@ -76,10 +76,17 @@ document.addEventListener('DOMContentLoaded', () => {
 
 		function updateTime() {
 			const timer = timeRemain(deadline);
+
 			daysField.textContent = setZero(timer.days);
 			hoursField.textContent = setZero(timer.hours);
 			minutesField.textContent = setZero(timer.minutes);
 			secondsField.textContent = setZero(timer.seconds);
+
+			daysField.textContent = zeroed(timer.days);
+			hoursField.textContent = zeroed(timer.hours);
+			minutesField.textContent = zeroed(timer.minutes);
+			secondsField.textContent = zeroed(timer.seconds);
+
 			if (timer.total <= 0) {
 				clearInterval(timeInterval);
 			}
@@ -87,7 +94,12 @@ document.addEventListener('DOMContentLoaded', () => {
 
 	}
 
+	function zeroed(num) {
+		return num <= 9 ? `0${num}` : num;
+	}
+
 	setTimer(deadline);
+
 
 	function setZero(num) {
 		return num < 10 ? num = `0${num}` : num;
@@ -98,9 +110,16 @@ document.addEventListener('DOMContentLoaded', () => {
 	const modal = document.querySelector('.modal');
 	const close = document.querySelector('[data-close]');
 
+	//TODO add modal
+	const modal = document.querySelector('.modal');
+	const triggers = document.querySelectorAll('[data-modal]');
+	const dataClose = modal.querySelector('.modal__close');
+
+
 	triggers.forEach(item => {
 		item.addEventListener('click', showModal);
 	});
+
 
 	close.addEventListener('click', closeModal);
 
@@ -136,10 +155,35 @@ document.addEventListener('DOMContentLoaded', () => {
 	window.addEventListener('scroll', showByScroll);
 
 	function showByScroll() {
+
+	dataClose.addEventListener('click', hideModal);
+
+	modal.addEventListener('click', event => {
+		if (event.target === modal) {
+			hideModal();
+		}
+	});
+
+
+	document.addEventListener('keydown', event => {
+		if (event.code === 'Escape' && modal.classList.contains('show')) {
+			hideModal();
+		}
+	});
+
+
+	const modalTimerId = setTimeout(showModal, 6000);
+
+
+	window.addEventListener('scroll', showModalOnScroll);
+
+	function showModalOnScroll() {
+
 		if (window.scrollY + document.documentElement.clientHeight >= document.documentElement.scrollHeight - 1) {
 			showModal();
 		}
 	}
+
 
 	const toTop = document.querySelector('.top-up');
 	window.addEventListener('scroll', showTopButton);
@@ -239,3 +283,19 @@ document.addEventListener('DOMContentLoaded', () => {
 
 	Producer.produce(data, CardMenu);
 });
+
+	function showModal() {
+		modal.classList.add('show');
+		modal.classList.remove('hide');
+		document.body.style.overflow = 'hidden';
+		clearTimeout(modalTimerId);
+		window.removeEventListener('scroll', showModalOnScroll);
+	}
+
+	function hideModal() {
+		modal.classList.add('hide');
+		modal.classList.remove('show');
+		document.body.style.overflow = '';
+	}
+});
+

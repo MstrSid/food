@@ -9,6 +9,15 @@ a {
   text-decoration: none;
 }
 
+
+.show {
+  display: block
+}
+
+.hide {
+  display: none
+}
+
 .btn {
   width: 220px;
   height: 65px;
@@ -60,6 +69,7 @@ a {
   font-weight: 400;
 }
 
+
 .show {
   display: block
 }
@@ -84,6 +94,7 @@ font-size: 48px;
     cursor: pointer;
   }
 }
+
 
 .fade {
   animation-name: fade;
