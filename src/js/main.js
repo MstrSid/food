@@ -1,7 +1,7 @@
 'use strict';
 
 document.addEventListener('DOMContentLoaded', () => {
-//TODO realise with tabs in header
+//realise with tabs in header
 	const slides = document.querySelectorAll('.tabcontent');
 	const tabs = document.querySelectorAll('.tabheader__item');
 	const tabsContainer = document.querySelector('.tabheader__items');
@@ -38,9 +38,8 @@ document.addEventListener('DOMContentLoaded', () => {
 	}
 
 
-	//TODO realise timer
+	//Timer
 	const deadline = '2023-05-20';
-
 
 	function timeRemain(deadline) {
 		let days, hours, minutes, seconds;
@@ -104,9 +103,6 @@ document.addEventListener('DOMContentLoaded', () => {
 	triggers.forEach(item => {
 		item.addEventListener('click', showModal);
 	});
-
-
-	//close.addEventListener('click', closeModal);
 
 	modal.addEventListener('click', event => {
 		if (event.target === modal) {
