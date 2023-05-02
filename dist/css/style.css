@@ -669,7 +669,6 @@ a {
   to {
     opacity: 1;
   }
-
 }
 .fade-out {
   animation-name: fade-out;
@@ -677,10 +676,10 @@ a {
 }
 
 @keyframes fade-out {
-  to {
-    opacity: 0;
-  }
   from {
     opacity: 1;
+  }
+  to {
+    opacity: 0;
   }
 }

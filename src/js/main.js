@@ -82,11 +82,6 @@ document.addEventListener('DOMContentLoaded', () => {
 			minutesField.textContent = setZero(timer.minutes);
 			secondsField.textContent = setZero(timer.seconds);
 
-			daysField.textContent = zeroed(timer.days);
-			hoursField.textContent = zeroed(timer.hours);
-			minutesField.textContent = zeroed(timer.minutes);
-			secondsField.textContent = zeroed(timer.seconds);
-
 			if (timer.total <= 0) {
 				clearInterval(timeInterval);
 			}
@@ -94,15 +89,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
 	}
 
-	function zeroed(num) {
-		return num <= 9 ? `0${num}` : num;
-	}
-
 	setTimer(deadline);
 
-
 	function setZero(num) {
-		return num < 10 ? num = `0${num}` : num;
+		return num < 10 ? `0${num}` : num;
 	}
 
 	// modal
@@ -110,18 +100,13 @@ document.addEventListener('DOMContentLoaded', () => {
 	const modal = document.querySelector('.modal');
 	const close = document.querySelector('[data-close]');
 
-	//TODO add modal
-	const modal = document.querySelector('.modal');
-	const triggers = document.querySelectorAll('[data-modal]');
-	const dataClose = modal.querySelector('.modal__close');
-
 
 	triggers.forEach(item => {
 		item.addEventListener('click', showModal);
 	});
 
 
-	close.addEventListener('click', closeModal);
+	//close.addEventListener('click', closeModal);
 
 	modal.addEventListener('click', event => {
 		if (event.target === modal) {
@@ -139,40 +124,29 @@ document.addEventListener('DOMContentLoaded', () => {
 
 	function closeModal() {
 		modal.classList.remove('show', 'fade');
-		modal.classList.add('fade-out');
-		setTimeout(() => modal.classList.add('hide'), 1500);
+		modal.classList.add('hide');
 		document.documentElement.style.overflow = 'unset';
-	}
-
-	function showModal() {
-		modal.classList.add('show', 'fade');
-		modal.classList.remove('hide', 'fade-out');
-		document.documentElement.style.overflow = 'hidden';
 		clearTimeout(modalTimeOut);
-		window.removeEventListener('scroll', showByScroll);
 	}
 
 	window.addEventListener('scroll', showByScroll);
 
 	function showByScroll() {
 
-	dataClose.addEventListener('click', hideModal);
+		close.addEventListener('click', hideModal);
 
-	modal.addEventListener('click', event => {
-		if (event.target === modal) {
-			hideModal();
-		}
-	});
-
+		modal.addEventListener('click', event => {
+			if (event.target === modal) {
+				hideModal();
+			}
+		});
+	}
 
 	document.addEventListener('keydown', event => {
 		if (event.code === 'Escape' && modal.classList.contains('show')) {
 			hideModal();
 		}
 	});
-
-
-	const modalTimerId = setTimeout(showModal, 6000);
 
 
 	window.addEventListener('scroll', showModalOnScroll);
@@ -191,16 +165,37 @@ document.addEventListener('DOMContentLoaded', () => {
 		document.documentElement.scrollTop = 0;
 	});
 
+	function showModal() {
+		modal.classList.add('show');
+		modal.classList.remove('hide');
+		document.body.style.overflow = 'hidden';
+		clearTimeout(modalTimeOut);
+		window.removeEventListener('scroll', showModalOnScroll);
+	}
+
+	function hideModal() {
+		modal.classList.add('hide');
+		modal.classList.remove('show');
+		document.body.style.overflow = '';
+	}
+
 	function showTopButton() {
 		if (window.scrollY >= 700) {
-			toTop.classList.add('show', 'fade');
 			toTop.classList.remove('hide', 'fade-out');
-
+			toTop.classList.add('show', 'fade');
 		} else {
-			toTop.classList.remove('show');
-			toTop.classList.add('hide');
+			toTop.classList.remove('show', 'fade');
 			toTop.classList.add('fade-out');
-			setTimeout(() => toTop.classList.add('hide'), 1500);
+			let anim = '';
+			if(toTop.getAnimations().length > 0){
+				anim = toTop.getAnimations()[0].animationName;
+			}
+			toTop.addEventListener('animationend', () => {
+				if (anim === 'fade-out') {
+					toTop.classList.add('hide');
+				}
+				anim = '';
+			});
 		}
 	}
 
@@ -248,7 +243,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
 		render() {
 			const div = document.createElement('div');
-			if(this.classes.length === 0){
+			if (this.classes.length === 0) {
 				div.classList.add('menu__item');
 			} else {
 				this.classes.forEach(item => div.classList.add(item));
@@ -267,7 +262,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
 
 	class Producer {
-		static produce(dataObj, className){
+		static produce(dataObj, className) {
 			dataObj.forEach(item => new className(
 				item.src,
 				item.alt,
@@ -282,20 +277,5 @@ document.addEventListener('DOMContentLoaded', () => {
 	}
 
 	Producer.produce(data, CardMenu);
-});
-
-	function showModal() {
-		modal.classList.add('show');
-		modal.classList.remove('hide');
-		document.body.style.overflow = 'hidden';
-		clearTimeout(modalTimerId);
-		window.removeEventListener('scroll', showModalOnScroll);
-	}
-
-	function hideModal() {
-		modal.classList.add('hide');
-		modal.classList.remove('show');
-		document.body.style.overflow = '';
-	}
 });
 
