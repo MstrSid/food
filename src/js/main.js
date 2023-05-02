@@ -131,18 +131,18 @@ document.addEventListener('DOMContentLoaded', () => {
 
 	function showByScroll() {
 
-		close.addEventListener('click', hideModal);
+		close.addEventListener('click', closeModal);
 
 		modal.addEventListener('click', event => {
 			if (event.target === modal) {
-				hideModal();
+				closeModal();
 			}
 		});
 	}
 
 	document.addEventListener('keydown', event => {
 		if (event.code === 'Escape' && modal.classList.contains('show')) {
-			hideModal();
+			closeModal();
 		}
 	});
 
@@ -166,15 +166,9 @@ document.addEventListener('DOMContentLoaded', () => {
 	function showModal() {
 		modal.classList.add('show');
 		modal.classList.remove('hide');
-		document.body.style.overflow = 'hidden';
+		document.documentElement.style.overflow = 'hidden';
 		clearTimeout(modalTimeOut);
 		window.removeEventListener('scroll', showModalOnScroll);
-	}
-
-	function hideModal() {
-		modal.classList.add('hide');
-		modal.classList.remove('show');
-		document.body.style.overflow = '';
 	}
 
 	function showTopButton() {
