@@ -269,5 +269,8 @@ document.addEventListener('DOMContentLoaded', () => {
 	}
 
 	Producer.produce(data, CardMenu);
+
+	// JSON
+	
 });
 

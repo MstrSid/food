@@ -97,7 +97,7 @@
 
 
 document.addEventListener('DOMContentLoaded', () => {
-  //TODO realise with tabs in header
+  //realise with tabs in header
   const slides = document.querySelectorAll('.tabcontent');
   const tabs = document.querySelectorAll('.tabheader__item');
   const tabsContainer = document.querySelector('.tabheader__items');
@@ -130,7 +130,7 @@ document.addEventListener('DOMContentLoaded', () => {
   function show(i) {
     slides[i].classList.add('show', 'fade');
     slides[i].classList.remove('hide');
-  } //TODO realise timer
+  } //Timer
 
 
   const deadline = '2023-05-20';
@@ -193,8 +193,8 @@ document.addEventListener('DOMContentLoaded', () => {
   const close = document.querySelector('[data-close]');
   triggers.forEach(item => {
     item.addEventListener('click', showModal);
-  }); //close.addEventListener('click', closeModal);
-
+  });
+  close.addEventListener('click', closeModal);
   modal.addEventListener('click', event => {
     if (event.target === modal) {
       closeModal();
@@ -217,17 +217,17 @@ document.addEventListener('DOMContentLoaded', () => {
   window.addEventListener('scroll', showByScroll);
 
   function showByScroll() {
-    close.addEventListener('click', hideModal);
+    close.addEventListener('click', closeModal);
     modal.addEventListener('click', event => {
       if (event.target === modal) {
-        hideModal();
+        closeModal();
       }
     });
   }
 
   document.addEventListener('keydown', event => {
     if (event.code === 'Escape' && modal.classList.contains('show')) {
-      hideModal();
+      closeModal();
     }
   });
   window.addEventListener('scroll', showModalOnScroll);
@@ -247,15 +247,9 @@ document.addEventListener('DOMContentLoaded', () => {
   function showModal() {
     modal.classList.add('show');
     modal.classList.remove('hide');
-    document.body.style.overflow = 'hidden';
+    document.documentElement.style.overflow = 'hidden';
     clearTimeout(modalTimeOut);
     window.removeEventListener('scroll', showModalOnScroll);
-  }
-
-  function hideModal() {
-    modal.classList.add('hide');
-    modal.classList.remove('show');
-    document.body.style.overflow = '';
   }
 
   function showTopButton() {
@@ -348,7 +342,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   }
 
-  Producer.produce(data, CardMenu);
+  Producer.produce(data, CardMenu); // JSON
 });
 
 /***/ })

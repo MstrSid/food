@@ -14,6 +14,12 @@ gulp.task('copy-html', () => {
 		.pipe(browsersync.stream());
 });
 
+gulp.task('copy-php', () => {
+	return gulp.src('./src/*.php')
+		.pipe(gulp.dest(dist))
+		.pipe(browsersync.stream());
+});
+
 gulp.task('build-js', () => {
 	return gulp.src('./src/js/main.js')
 		.pipe(webpack({
@@ -70,13 +76,14 @@ gulp.task('watch', () => {
 	});
 
 	gulp.watch('./src/index.html', gulp.parallel('copy-html'));
+	gulp.watch('./src/*.php', gulp.parallel('copy-php'));
 	gulp.watch('./src/icons/**/*.*', gulp.parallel('copy-assets'));
 	gulp.watch('./src/img/**/*.*', gulp.parallel('copy-assets'));
 	gulp.watch('./src/scss/**/*.scss', gulp.parallel('build-sass'));
 	gulp.watch('./src/js/**/*.js', gulp.parallel('build-js'));
 });
 
-gulp.task('build', gulp.parallel('copy-html', 'copy-assets', 'build-sass', 'build-js'));
+gulp.task('build', gulp.parallel('copy-html', 'copy-php', 'copy-assets', 'build-sass', 'build-js'));
 
 gulp.task('prod', () => {
 	gulp.src('./src/index.html')
