@@ -342,7 +342,51 @@ document.addEventListener('DOMContentLoaded', () => {
 
   }
 
-  Producer.produce(data, CardMenu); // JSON
+  Producer.produce(data, CardMenu); // Forms
+
+  const forms = document.querySelectorAll('form');
+  forms.forEach(form => {
+    postData(form, '.form_data');
+  });
+  const messages = {
+    success: 'С Вами скоро свяжутся',
+    fail: 'Что-то пошло не так',
+    loading: 'Загрузка'
+  };
+
+  function postData(form, classSelector) {
+    form.addEventListener('submit', event => {
+      event.preventDefault();
+      const formData = new FormData(form);
+      const req = new XMLHttpRequest();
+      req.open('POST', 'server.php');
+      req.send(formData);
+      const container = form.closest(classSelector);
+      form.classList.add('hide');
+      const div = document.createElement('div');
+      div.textContent = messages.loading;
+      container.append(div);
+      req.addEventListener('load', () => {
+        if (req.status === 200) {
+          console.log(req.response);
+          div.textContent = messages.success;
+        } else {
+          div.textContent = messages.fail;
+          restoreForm(form, div);
+          console.log(new Error('Error in POST method'));
+        }
+      });
+    });
+  }
+
+  function restoreForm(form, div) {
+    setTimeout(() => {
+      form.reset();
+      closeModal();
+      div.remove();
+      form.classList.remove('hide');
+    }, 3000);
+  }
 });
 
 /***/ })
