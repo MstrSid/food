@@ -19,6 +19,7 @@
     "autoprefixer": "^9.7.1",
     "babel-loader": "^8.0.6",
     "browser-sync": "^2.26.7",
+    "eslint": "^8.35.0",
     "gulp": "^4.0.2",
     "gulp-clean-css": "^4.2.0",
     "gulp-postcss": "^8.0.0",
@@ -26,7 +27,9 @@
     "sass": "^1.50.0",
     "webpack": "^4.41.2",
     "webpack-cli": "^3.3.10",
-    "webpack-stream": "^5.2.1",
-    "eslint": "^8.35.0"
+    "webpack-stream": "^5.2.1"
+  },
+  "dependencies": {
+    "core-js": "^3.30.2"
   }
 }

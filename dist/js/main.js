@@ -194,9 +194,12 @@ document.addEventListener('DOMContentLoaded', () => {
   triggers.forEach(item => {
     item.addEventListener('click', showModal);
   });
-  close.addEventListener('click', closeModal);
+  /*
+  Теперь closeModal будет работать и для создаваемых элементов
+  */
+
   modal.addEventListener('click', event => {
-    if (event.target === modal) {
+    if (event.target === modal || event.target.getAttribute('data-close') === '') {
       closeModal();
     }
   });
@@ -351,41 +354,68 @@ document.addEventListener('DOMContentLoaded', () => {
   const messages = {
     success: 'С Вами скоро свяжутся',
     fail: 'Что-то пошло не так',
-    loading: 'Загрузка'
+    loading: './img/spinner.svg'
   };
 
-  function postData(form, classSelector) {
+  function postData(form) {
     form.addEventListener('submit', event => {
       event.preventDefault();
+      const statusMessage = document.createElement('img');
+      statusMessage.src = messages.loading;
+      statusMessage.style.cssText = `
+				display: block;
+				margin: 0 auto;
+			`;
+      form.insertAdjacentElement('afterend', statusMessage);
+      const req = new XMLHttpRequest(); //req.setRequestHeader('Content-type', 'application/json; charset=utf-8');
+
       const formData = new FormData(form);
-      const req = new XMLHttpRequest();
       req.open('POST', 'server.php');
+      /*
+               const object = {};
+               formData.forEach(function(value, key){
+                   object[key] = value;
+               });
+               const json = JSON.stringify(object);
+               request.send(json);
+      */
+
       req.send(formData);
-      const container = form.closest(classSelector);
-      form.classList.add('hide');
-      const div = document.createElement('div');
-      div.textContent = messages.loading;
-      container.append(div);
       req.addEventListener('load', () => {
         if (req.status === 200) {
           console.log(req.response);
-          div.textContent = messages.success;
+          showThanksModal(messages.success);
+          form.reset();
+          statusMessage.remove();
         } else {
-          div.textContent = messages.fail;
-          restoreForm(form, div);
+          showThanksModal(messages.fail);
           console.log(new Error('Error in POST method'));
+          form.reset();
         }
       });
     });
   }
 
-  function restoreForm(form, div) {
+  function showThanksModal(message) {
+    const prevModal = document.querySelector('.modal__dialog');
+    prevModal.classList.add('hide');
+    prevModal.classList.remove('show');
+    showModal();
+    const thanksModal = document.createElement('div');
+    thanksModal.classList.add('modal__dialog');
+    thanksModal.innerHTML = `
+		<div class="modal__content">
+               <div class="modal__close" data-close>&times;</div>
+               <div class="modal__title">${message}</div>
+            </div>
+		`;
+    document.querySelector('.modal').append(thanksModal);
     setTimeout(() => {
-      form.reset();
       closeModal();
-      div.remove();
-      form.classList.remove('hide');
-    }, 3000);
+      thanksModal.remove();
+      prevModal.classList.add('show');
+      prevModal.classList.remove('hide');
+    }, 4000);
   }
 });
 
