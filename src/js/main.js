@@ -193,29 +193,6 @@ document.addEventListener('DOMContentLoaded', () => {
 	}
 
 	//Card class
-	const data = [{
-		src: '"img/tabs/vegy.jpg"',
-		alt: '"vegy"',
-		title: 'Меню "Фитнес"',
-		descr: 'Меню "Фитнес" - это новый подход к приготовлению блюд: больше свежих овощей и фруктов. Продукт активных и здоровых людей. Это абсолютно новый продукт с оптимальной ценой и высоким качеством!',
-		price: 10
-
-	},
-	{
-		src: '"img/tabs/elite.jpg"',
-		alt: '"elite"',
-		title: 'Меню “Премиум”',
-		descr: 'В меню “Премиум” мы используем не только красивый дизайн упаковки, но и качественное исполнение блюд. Красная рыба, морепродукты, фрукты - ресторанное меню без похода в ресторан!',
-		price: 15
-	},
-	{
-		src: '"img/tabs/post.jpg"',
-		alt: '"post"',
-		title: 'Меню "Постное"',
-		descr: 'Меню “Постное” - это тщательный подбор ингредиентов: полное отсутствие продуктов животного происхождения, молоко из миндаля, овса, кокоса или гречки, правильное количество белков за счет тофу и импортных вегетарианских стейков.',
-		price: 5
-
-	}];
 
 	class CardMenu {
 		constructor(src, alt, title, descr, price, changeCourse, parentSelector, ...classes) {
@@ -231,7 +208,7 @@ document.addEventListener('DOMContentLoaded', () => {
 		}
 
 		changePrice() {
-			this.price = this.price * this.changeCourse;
+			this.price = (this.price * this.changeCourse).toFixed(2);
 		}
 
 		render() {
@@ -253,29 +230,28 @@ document.addEventListener('DOMContentLoaded', () => {
 		}
 	}
 
-
 	class Producer {
-		static produce(dataObj, className) {
-			dataObj.forEach(item => new className(
-				item.src,
-				item.alt,
-				item.title,
-				item.descr,
-				item.price,
+		static produce({img, altimg, title, descr, price}, className) {
+			new className(
+				img,
+				altimg,
+				title,
+				descr,
+				price,
 				2.9,
 				'.menu .container',
 				'menu__item'
-			).render());
+			).render();
 		}
 	}
 
-	Producer.produce(data, CardMenu);
+	//Producer.produce(data, CardMenu);
 
 	// Forms
 	const forms = document.querySelectorAll('form');
 
 	forms.forEach(form => {
-		postData(form, '.form_data');
+		bindPostData(form);
 	});
 
 	const messages = {
@@ -284,7 +260,33 @@ document.addEventListener('DOMContentLoaded', () => {
 		loading: './img/spinner.svg'
 	};
 
-	function postData(form) {
+	const getResources = async (url) => {
+		const req = await fetch(url);
+		if (!req.ok) {
+			throw new Error(`Problem with ${url}, status - ${req.status}`);
+		}
+
+		return await req.json();
+	};
+
+	getResources('http://localhost:3000/menu')
+		.then(data => {
+			data.forEach(item => Producer.produce(item, CardMenu));
+		});
+
+	const postData = async (url, data) => {
+		const req = await fetch(url, {
+			method: 'POST',
+			headers: {
+				'Content-type': 'application/json'
+			},
+			body: data
+		});
+
+		return await req.json();
+	};
+
+	function bindPostData(form) {
 		form.addEventListener('submit', (event) => {
 			event.preventDefault();
 
@@ -296,33 +298,20 @@ document.addEventListener('DOMContentLoaded', () => {
 			`;
 			form.insertAdjacentElement('afterend', statusMessage);
 
-			const req = new XMLHttpRequest();
-			//req.setRequestHeader('Content-type', 'application/json; charset=utf-8');
 			const formData = new FormData(form);
-			req.open('POST', 'server.php');
 
-			/*
-            const object = {};
-            formData.forEach(function(value, key){
-                object[key] = value;
-            });
-            const json = JSON.stringify(object);
-            request.send(json);
-			*/
-			req.send(formData);
+			const json = JSON.stringify(Object.fromEntries(formData.entries()));
 
-			req.addEventListener('load', () => {
-				if (req.status === 200) {
-					console.log(req.response);
+			postData('http://localhost:3000/requests', json)
+				.then(data => {
+					console.log(data);
 					showThanksModal(messages.success);
-					form.reset();
 					statusMessage.remove();
-				} else {
+				}).catch(() => {
 					showThanksModal(messages.fail);
+					statusMessage.remove();
 					console.log(new Error('Error in POST method'));
-					form.reset();
-				}
-			});
+				}).finally(() => form.reset());
 		});
 	}
 
