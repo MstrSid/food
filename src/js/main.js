@@ -5,6 +5,9 @@ document.addEventListener('DOMContentLoaded', () => {
 	const slides = document.querySelectorAll('.tabcontent');
 	const tabs = document.querySelectorAll('.tabheader__item');
 	const tabsContainer = document.querySelector('.tabheader__items');
+	const REQUESTS_URL = 'http://localhost:3000/requests';
+	const MENU_URL = 'http://localhost:3000/menu';
+	const USD_COURSE = 2.89;
 
 	hide();
 	show(0);
@@ -193,30 +196,6 @@ document.addEventListener('DOMContentLoaded', () => {
 	}
 
 	//Card class
-	const data = [{
-		src: '"img/tabs/vegy.jpg"',
-		alt: '"vegy"',
-		title: 'Меню "Фитнес"',
-		descr: 'Меню "Фитнес" - это новый подход к приготовлению блюд: больше свежих овощей и фруктов. Продукт активных и здоровых людей. Это абсолютно новый продукт с оптимальной ценой и высоким качеством!',
-		price: 10
-
-	},
-	{
-		src: '"img/tabs/elite.jpg"',
-		alt: '"elite"',
-		title: 'Меню “Премиум”',
-		descr: 'В меню “Премиум” мы используем не только красивый дизайн упаковки, но и качественное исполнение блюд. Красная рыба, морепродукты, фрукты - ресторанное меню без похода в ресторан!',
-		price: 15
-	},
-	{
-		src: '"img/tabs/post.jpg"',
-		alt: '"post"',
-		title: 'Меню "Постное"',
-		descr: 'Меню “Постное” - это тщательный подбор ингредиентов: полное отсутствие продуктов животного происхождения, молоко из миндаля, овса, кокоса или гречки, правильное количество белков за счет тофу и импортных вегетарианских стейков.',
-		price: 5
-
-	}];
-
 	class CardMenu {
 		constructor(src, alt, title, descr, price, changeCourse, parentSelector, ...classes) {
 			this.src = src;
@@ -231,7 +210,7 @@ document.addEventListener('DOMContentLoaded', () => {
 		}
 
 		changePrice() {
-			this.price = this.price * this.changeCourse;
+			this.price = (this.price * this.changeCourse).toFixed(2);
 		}
 
 		render() {
@@ -255,27 +234,26 @@ document.addEventListener('DOMContentLoaded', () => {
 
 
 	class Producer {
-		static produce(dataObj, className) {
-			dataObj.forEach(item => new className(
-				item.src,
-				item.alt,
-				item.title,
-				item.descr,
-				item.price,
-				2.9,
+		static produce({img, altimg, title, descr, price}, usd, className) {
+			new className(
+				img,
+				altimg,
+				title,
+				descr,
+				price,
+				usd,
 				'.menu .container',
 				'menu__item'
-			).render());
+			).render();
 		}
 	}
 
-	Producer.produce(data, CardMenu);
 
 	// Forms
 	const forms = document.querySelectorAll('form');
 
 	forms.forEach(form => {
-		postData(form, '.form_data');
+		bindPostData(form);
 	});
 
 	const messages = {
@@ -284,7 +262,33 @@ document.addEventListener('DOMContentLoaded', () => {
 		loading: './img/spinner.svg'
 	};
 
-	function postData(form) {
+	const getData = async url => {
+		const res = await fetch(url);
+		if (!res.ok) {
+			throw new Error(`Error with ${url}, status ${res.status}`);
+		}
+		return await res.json();
+	};
+
+	getData(MENU_URL).then(data => {
+		data.forEach(obj => {
+			Producer.produce(obj, USD_COURSE, CardMenu);
+		});
+	});
+
+	const postData = async (url, data) => {
+		const res = await fetch(url, {
+			method: 'POST',
+			headers: {
+				'Content-Type': 'application/json',
+			},
+			body: data
+		});
+
+		return await res.json();
+	};
+
+	function bindPostData(form) {
 		form.addEventListener('submit', (event) => {
 			event.preventDefault();
 
@@ -296,33 +300,22 @@ document.addEventListener('DOMContentLoaded', () => {
 			`;
 			form.insertAdjacentElement('afterend', statusMessage);
 
-			const req = new XMLHttpRequest();
-			//req.setRequestHeader('Content-type', 'application/json; charset=utf-8');
 			const formData = new FormData(form);
-			req.open('POST', 'server.php');
 
-			/*
-            const object = {};
-            formData.forEach(function(value, key){
-                object[key] = value;
-            });
-            const json = JSON.stringify(object);
-            request.send(json);
-			*/
-			req.send(formData);
+			const jsonObj = JSON.stringify(Object.fromEntries(formData.entries()));
+			console.log(jsonObj);
 
-			req.addEventListener('load', () => {
-				if (req.status === 200) {
-					console.log(req.response);
+			postData(REQUESTS_URL, jsonObj)
+				.then(data => {
+					console.log(data);
 					showThanksModal(messages.success);
+				}).catch(() => {
+					showThanksModal(messages.fail);
+				}).finally(() => {
 					form.reset();
 					statusMessage.remove();
-				} else {
-					showThanksModal(messages.fail);
-					console.log(new Error('Error in POST method'));
-					form.reset();
-				}
-			});
+				});
+
 		});
 	}
 
