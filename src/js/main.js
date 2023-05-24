@@ -343,6 +343,7 @@ document.addEventListener('DOMContentLoaded', () => {
 		}, 4000);
 	}
 
+	//slider with counter
 	const sliderParent = document.querySelector('.offer__slider');
 	const sliderWrapper = document.querySelector('.offer__slider-wrapper');
 	const sliderPrev = document.querySelector('.offer__slider-prev');
