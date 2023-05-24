@@ -342,5 +342,56 @@ document.addEventListener('DOMContentLoaded', () => {
 			prevModal.classList.remove('hide');
 		}, 4000);
 	}
+
+	const sliderParent = document.querySelector('.offer__slider');
+	const sliderWrapper = document.querySelector('.offer__slider-wrapper');
+	const sliderPrev = document.querySelector('.offer__slider-prev');
+	const sliderNext = document.querySelector('.offer__slider-next');
+	const slidesSlider = sliderWrapper.querySelectorAll('.offer__slide');
+	const slidesCounter = document.querySelector('.offer__slider-counter');
+	const slidesCounterCurrent = slidesCounter.querySelector('#current');
+	const slidesCounterTotal = slidesCounter.querySelector('#total');
+	const stepSlider = 100 / slidesSlider.length;
+	const sliderStartPosition = 100 - stepSlider;
+	let sliderPosition = sliderStartPosition;
+	let sliderCounterValue = 1;
+	const slidesTotal = slidesSlider.length;
+	sliderParent.style.overflow = 'hidden';
+	sliderWrapper.style.display = 'flex';
+	sliderWrapper.style.width = `${slidesTotal * 100}%`;
+	sliderWrapper.style.transform = `translateX(${sliderStartPosition}%)`;
+	sliderWrapper.style.transition = 'all 0.5s ease';
+	slidesCounterCurrent.textContent = `0${sliderCounterValue}`;
+	slidesCounterTotal.textContent = `0${slidesTotal}`;
+
+	sliderParent.addEventListener('click', event => {
+		if (event.target === sliderNext) {
+			sliderPosition -= stepSlider;
+			++sliderCounterValue;
+			if(sliderCounterValue > slidesTotal){
+				sliderCounterValue = 1;
+			}
+			slidesCounterCurrent.textContent = `0${sliderCounterValue}`;
+			if (sliderPosition < 0) {
+				sliderPosition = sliderStartPosition;
+			}
+			console.log(event.target);
+			sliderWrapper.style.transform = `translateX(${sliderPosition}%)`;
+		}
+		if (event.target === sliderPrev) {
+			sliderPosition += stepSlider;
+			--sliderCounterValue;
+			if(sliderCounterValue < 1){
+				sliderCounterValue = slidesTotal;
+			}
+			slidesCounterCurrent.textContent = `0${sliderCounterValue}`;
+			if (sliderPosition > sliderStartPosition) {
+				sliderPosition = 0;
+			}
+			console.log(event.target);
+			sliderWrapper.style.transform = `translateX(${sliderPosition}%)`;
+		}
+	});
+
 });
 
