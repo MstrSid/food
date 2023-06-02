@@ -2880,7 +2880,7 @@ document.addEventListener('DOMContentLoaded', () => {
   } //Timer
 
 
-  const deadline = '2023-05-20';
+  const deadline = '2023-06-20';
 
   function timeRemain(deadline) {
     let days, hours, minutes, seconds;
@@ -3161,7 +3161,70 @@ document.addEventListener('DOMContentLoaded', () => {
       prevModal.classList.add('show');
       prevModal.classList.remove('hide');
     }, 4000);
-  }
+  } //Slider
+
+
+  const parentSlider = document.querySelector('.offer__slider');
+  const sliderCounterWrapper = document.querySelector('.offer__slider-counter');
+  const sliderPrevBtn = sliderCounterWrapper.querySelector('.offer__slider-prev');
+  const sliderNextBtn = sliderCounterWrapper.querySelector('.offer__slider-next');
+  const sliderCountCurrent = sliderCounterWrapper.querySelector('#current');
+  const sliderCountTotal = sliderCounterWrapper.querySelector('#total');
+  const sliderWrapper = document.querySelector('.offer__slider-wrapper');
+  const slidesTotal = sliderWrapper.querySelectorAll('.offer__slide');
+  const slidesCount = slidesTotal.length; // количество всех слайдов
+
+  const totalWidth = slidesCount * 100; // общая ширина обертки слайдов
+
+  const startSlideIndex = 1; // стартовое значение индекса в sliderCounterWrapper
+
+  const stepTranslate = 100 / slidesCount;
+  const startTranslate = 100 - stepTranslate; // начальное смещение всех слайдов
+
+  let currentTranslate = startTranslate; //текущее смещение слайдов
+
+  let currentSlide = startSlideIndex; //текущий индекс слайда в sliderCounterWrapper
+
+  const formatSlidesLength = length => {
+    return length >= 10 ? `${length}` : `0${length}`;
+  };
+
+  sliderWrapper.style.display = 'flex';
+  sliderWrapper.style.width = `${totalWidth}%`;
+  sliderWrapper.style.transform = `translateX(${startTranslate}%)`;
+  sliderWrapper.style.transition = 'all 0.5s ease';
+  parentSlider.style.overflow = 'hidden';
+  sliderCountTotal.textContent = formatSlidesLength(slidesCount);
+  sliderCountCurrent.textContent = formatSlidesLength(currentSlide);
+  sliderCounterWrapper.addEventListener('click', event => {
+    if (event.target === sliderNextBtn) {
+      currentTranslate -= stepTranslate;
+
+      if (currentTranslate < 0) {
+        currentSlide = startSlideIndex;
+        currentTranslate = startTranslate;
+        sliderCountCurrent.textContent = formatSlidesLength(currentSlide);
+      } else {
+        sliderCountCurrent.textContent = formatSlidesLength(++currentSlide);
+      }
+
+      sliderWrapper.style.transform = `translateX(${currentTranslate}%)`;
+    }
+
+    if (event.target === sliderPrevBtn) {
+      currentTranslate += stepTranslate;
+
+      if (currentTranslate >= 100) {
+        currentSlide = slidesCount;
+        currentTranslate = 0;
+        sliderCountCurrent.textContent = formatSlidesLength(currentSlide);
+      } else {
+        sliderCountCurrent.textContent = formatSlidesLength(--currentSlide);
+      }
+
+      sliderWrapper.style.transform = `translateX(${currentTranslate}%)`;
+    }
+  });
 });
 
 /***/ })
