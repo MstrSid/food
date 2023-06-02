@@ -3164,67 +3164,80 @@ document.addEventListener('DOMContentLoaded', () => {
   } //Slider
 
 
-  const parentSlider = document.querySelector('.offer__slider');
-  const sliderCounterWrapper = document.querySelector('.offer__slider-counter');
-  const sliderPrevBtn = sliderCounterWrapper.querySelector('.offer__slider-prev');
-  const sliderNextBtn = sliderCounterWrapper.querySelector('.offer__slider-next');
-  const sliderCountCurrent = sliderCounterWrapper.querySelector('#current');
-  const sliderCountTotal = sliderCounterWrapper.querySelector('#total');
-  const sliderWrapper = document.querySelector('.offer__slider-wrapper');
-  const slidesTotal = sliderWrapper.querySelectorAll('.offer__slide');
-  const slidesCount = slidesTotal.length; // количество всех слайдов
+  class CustomSlider {
+    constructor(parentSlider, sliderCounterWrapper, sliderPrevBtn, sliderNextBtn, sliderCountCurrent, sliderCountTotal, sliderWrapper, slideSelector) {
+      this.parentSlider = document.querySelector(parentSlider);
+      this.sliderCounterWrapper = document.querySelector(sliderCounterWrapper);
+      this.sliderPrevBtn = this.sliderCounterWrapper.querySelector(sliderPrevBtn);
+      this.sliderNextBtn = this.sliderCounterWrapper.querySelector(sliderNextBtn);
+      this.sliderCountCurrent = this.sliderCounterWrapper.querySelector(sliderCountCurrent);
+      this.sliderCountTotal = this.sliderCounterWrapper.querySelector(sliderCountTotal);
+      this.sliderWrapper = document.querySelector(sliderWrapper);
+      this.slidesTotal = this.sliderWrapper.querySelectorAll(slideSelector);
+      this.slidesCount = this.slidesTotal.length; // количество всех слайдов
 
-  const totalWidth = slidesCount * 100; // общая ширина обертки слайдов
+      this.totalWidth = this.slidesCount * 100; // общая ширина обертки слайдов
 
-  const startSlideIndex = 1; // стартовое значение индекса в sliderCounterWrapper
+      this.startSlideIndex = 1; // стартовое значение индекса в sliderCounterWrapper
 
-  const stepTranslate = 100 / slidesCount;
-  const startTranslate = 100 - stepTranslate; // начальное смещение всех слайдов
+      this.stepTranslate = 100 / this.slidesCount;
+      this.startTranslate = 100 - this.stepTranslate; // начальное смещение всех слайдов
 
-  let currentTranslate = startTranslate; //текущее смещение слайдов
+      this.currentTranslate = this.startTranslate; //текущее смещение слайдов
 
-  let currentSlide = startSlideIndex; //текущий индекс слайда в sliderCounterWrapper
-
-  const formatSlidesLength = length => {
-    return length >= 10 ? `${length}` : `0${length}`;
-  };
-
-  sliderWrapper.style.display = 'flex';
-  sliderWrapper.style.width = `${totalWidth}%`;
-  sliderWrapper.style.transform = `translateX(${startTranslate}%)`;
-  sliderWrapper.style.transition = 'all 0.5s ease';
-  parentSlider.style.overflow = 'hidden';
-  sliderCountTotal.textContent = formatSlidesLength(slidesCount);
-  sliderCountCurrent.textContent = formatSlidesLength(currentSlide);
-  sliderCounterWrapper.addEventListener('click', event => {
-    if (event.target === sliderNextBtn) {
-      currentTranslate -= stepTranslate;
-
-      if (currentTranslate < 0) {
-        currentSlide = startSlideIndex;
-        currentTranslate = startTranslate;
-        sliderCountCurrent.textContent = formatSlidesLength(currentSlide);
-      } else {
-        sliderCountCurrent.textContent = formatSlidesLength(++currentSlide);
-      }
-
-      sliderWrapper.style.transform = `translateX(${currentTranslate}%)`;
+      this.currentSlide = this.startSlideIndex; //текущий индекс слайда в sliderCounterWrapper
     }
 
-    if (event.target === sliderPrevBtn) {
-      currentTranslate += stepTranslate;
-
-      if (currentTranslate >= 100) {
-        currentSlide = slidesCount;
-        currentTranslate = 0;
-        sliderCountCurrent.textContent = formatSlidesLength(currentSlide);
-      } else {
-        sliderCountCurrent.textContent = formatSlidesLength(--currentSlide);
-      }
-
-      sliderWrapper.style.transform = `translateX(${currentTranslate}%)`;
+    formatSlidesLength(length) {
+      return length >= 10 ? `${length}` : `0${length}`;
     }
-  });
+
+    stylize() {
+      this.sliderWrapper.style.display = 'flex';
+      this.sliderWrapper.style.width = `${this.totalWidth}%`;
+      this.sliderWrapper.style.transform = `translateX(${this.startTranslate}%)`;
+      this.sliderWrapper.style.transition = 'all 0.5s ease';
+      this.parentSlider.style.overflow = 'hidden';
+      this.sliderCountTotal.textContent = this.formatSlidesLength(this.slidesCount);
+      this.sliderCountCurrent.textContent = this.formatSlidesLength(this.currentSlide);
+    }
+
+    init() {
+      this.stylize();
+      this.sliderCounterWrapper.addEventListener('click', event => {
+        if (event.target === this.sliderNextBtn) {
+          this.currentTranslate -= this.stepTranslate;
+
+          if (this.currentTranslate < 0) {
+            this.currentSlide = this.startSlideIndex;
+            this.currentTranslate = this.startTranslate;
+            this.sliderCountCurrent.textContent = this.formatSlidesLength(this.currentSlide);
+          } else {
+            this.sliderCountCurrent.textContent = this.formatSlidesLength(++this.currentSlide);
+          }
+
+          this.sliderWrapper.style.transform = `translateX(${this.currentTranslate}%)`;
+        }
+
+        if (event.target === this.sliderPrevBtn) {
+          this.currentTranslate += this.stepTranslate;
+
+          if (this.currentTranslate >= 100) {
+            this.currentSlide = this.slidesCount;
+            this.currentTranslate = 0;
+            this.sliderCountCurrent.textContent = this.formatSlidesLength(this.currentSlide);
+          } else {
+            this.sliderCountCurrent.textContent = this.formatSlidesLength(--this.currentSlide);
+          }
+
+          this.sliderWrapper.style.transform = `translateX(${this.currentTranslate}%)`;
+        }
+      });
+    }
+
+  }
+
+  new CustomSlider('.offer__slider', '.offer__slider-counter', '.offer__slider-prev', '.offer__slider-next', '#current', '#total', '.offer__slider-wrapper', '.offer__slide').init();
 });
 
 /***/ })
